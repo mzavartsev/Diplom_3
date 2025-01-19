@@ -24,3 +24,6 @@ class MainPageLocators:
     order_number_at_work = (By.CSS_SELECTOR, "ul[class^='OrderFeed_orderListReady']")
     order_number_at_work1 = (By.CSS_SELECTOR, "ul[class^='OrderFeed_orderListReady'] > li[class^='text text_type_digits']")
     order_number_at_work2 = (By.XPATH, "//ul[contains(@class, 'OrderFeed_orderListReady')]/li")
+    modal_window = (By.XPATH, "//div[contains(@class, 'Modal_modal_overlay__x2ZCr')]")
+    modal_window2 = (By.CLASS_NAME, 'Modal_modal_overlay__x2ZCr')
+    logo = (By.XPATH, "//div[contains(@class, 'header__logo')]")

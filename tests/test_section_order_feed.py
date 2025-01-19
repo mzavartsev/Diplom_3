@@ -1,5 +1,4 @@
 import time
-
 from pages.main_page import *
 from locators.main_page_locators import *
 from data import *
@@ -12,6 +11,7 @@ class TestSectionOrderFeed:
     def test_show_details_of_order(self, driver_start, create_and_delete_user):
         class_object = MainPages()
         driver_start.get(ORDER_FEED_URL)
+        time.sleep(3)
         class_object.find_element_with_wait(MainPageLocators.order_in_order_feed, driver_start).click()
         modal_window = class_object.find_element_with_wait(MainPageLocators.section_open_locator, driver_start)
         assert "opened" in modal_window.get_attribute("class")
@@ -38,13 +38,17 @@ class TestSectionOrderFeed:
     def test_counter_of_completed_order_for_all_time_increases(self, driver_start):
         class_object = MainPages()
         driver_start.get(ORDER_FEED_URL)
+        time.sleep(3)
         counters = class_object.find_few_elements_with_wait(MainPageLocators.counters_of_created, driver_start)
         counter_one_before = counters[0].text
         driver_start.get(LOGIN_PAGE_URL)
+        time.sleep(3)
         class_object.authorization(driver_start)
         driver_start.get(BASE_URL)
+        time.sleep(3)
         class_object.create_order(driver_start)
         driver_start.get(ORDER_FEED_URL)
+        time.sleep(3)
         counters = class_object.find_few_elements_with_wait(MainPageLocators.counters_of_created,
                                                                                   driver_start)
         counter_one_after = counters[0].text
@@ -56,13 +60,17 @@ class TestSectionOrderFeed:
     def test_counter_of_completed_order_for_today_increases(self, driver_start):
         class_object = MainPages()
         driver_start.get(ORDER_FEED_URL)
+        time.sleep(3)
         counters = class_object.find_few_elements_with_wait(MainPageLocators.counters_of_created, driver_start)
         counter_two_before = counters[1].text
         driver_start.get(LOGIN_PAGE_URL)
+        time.sleep(3)
         class_object.authorization(driver_start)
         driver_start.get(BASE_URL)
+        time.sleep(3)
         class_object.create_order(driver_start)
         driver_start.get(ORDER_FEED_URL)
+        time.sleep(3)
         counters = class_object.find_few_elements_with_wait(MainPageLocators.counters_of_created, driver_start)
         counter_two_after = counters[1].text
         assert int(counter_two_before) <= int(counter_two_after)
@@ -79,7 +87,7 @@ class TestSectionOrderFeed:
         order_number_element = class_object.find_element_with_wait_for_chaching_text(
             MainPageLocators.number_of_order_after_create_order, driver_start)
         order_number = order_number_element.text
-        time.sleep(2)
+        time.sleep(1)
         driver_start.get(ORDER_FEED_URL)
         numbers_at_work = class_object.find_element_with_wait_for_chaching_text(MainPageLocators.order_number_at_work, driver_start, text="Все текущие заказы готовы!")
         class_object.find_element_with_wait_for_chaching_text(MainPageLocators.order_number_at_work1, driver_start, text="Все текущие заказы готовы!")

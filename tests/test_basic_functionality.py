@@ -2,7 +2,6 @@ from pages.main_page import *
 from locators.main_page_locators import *
 from selenium.webdriver.common.action_chains import ActionChains
 from data import *
-from time import sleep
 
 
 class TestBasicFunctionality:
@@ -12,6 +11,7 @@ class TestBasicFunctionality:
     def test_go_to_constructor(self, driver_start, create_and_delete_user):
         class_object = MainPages()
         driver_start.get(LOGIN_PAGE_URL)
+        time.sleep(3)
         class_object.find_element_with_wait(MainPageLocators.constructor, driver_start).click()
         assemble_the_burger_text = class_object.find_element_with_wait(
             MainPageLocators.assemble_the_burger_text,driver_start)
@@ -23,6 +23,7 @@ class TestBasicFunctionality:
     def test_got_to_order_feed(self, driver_start):
         class_object = MainPages()
         driver_start.get(BASE_URL)
+        time.sleep(3)
         class_object.find_element_with_wait(MainPageLocators.order_feed_button, driver_start).click()
         order_feed_text = class_object.find_element_with_wait(MainPageLocators.order_feed_text, driver_start)
         assert order_feed_text.is_displayed()
@@ -33,6 +34,7 @@ class TestBasicFunctionality:
     def test_show_modal_window_after_click_on_the_ingredient(self, driver_start):
         class_object = MainPages()
         driver_start.get(BASE_URL)
+        time.sleep(3)
         class_object.find_element_with_wait(MainPageLocators.bun, driver_start).click()
         modal_window = class_object.find_element_with_wait(MainPageLocators.section_locator, driver_start)
         assert "opened" in modal_window.get_attribute("class")
@@ -43,6 +45,7 @@ class TestBasicFunctionality:
     def test_close_modal_window_about_ingredient(self, driver_start):
         class_object = MainPages()
         driver_start.get(BASE_URL)
+        time.sleep(3)
         class_object.find_element_with_wait(MainPageLocators.bun, driver_start).click()
         class_object.find_element_with_wait(MainPageLocators.cross_in_modal_window, driver_start).click()
         modal_window = class_object.find_element_with_wait(MainPageLocators.section_locator, driver_start)
@@ -68,8 +71,10 @@ class TestBasicFunctionality:
     def test_create_order_after_authorization(self, driver_start):
         class_object = MainPages()
         driver_start.get(LOGIN_PAGE_URL)
+        time.sleep(3)
         class_object.authorization(driver_start)
         driver_start.get(BASE_URL)
+        time.sleep(3)
         class_object.create_order(driver_start)
         order_number = (class_object.find_element_with_wait_for_chaching_text
                         (MainPageLocators.number_of_order_after_create_order, driver_start)).text
