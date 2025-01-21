@@ -1,31 +1,25 @@
-import allure
-from selenium.webdriver.support.wait import WebDriverWait
-from selenium.webdriver.support import expected_conditions
 from locators.recovery_page_locators import *
-from locators.main_page_locators import *
+from pages.base_page import *
+import time
 from data import *
-from conftest import DRIVER_NAME
+from locators.autorization_page_locators import *
 
-
-class AuthorizationAndRecoveryPages:
-    @allure.step('Находим элемент {locator}')
-    def find_element_with_wait(self, locator, driver):
-        if DRIVER_NAME == "firefox":
-            WebDriverWait(driver, 15).until_not(expected_conditions.invisibility_of_element_located(MainPageLocators.modal_window))
-            element = WebDriverWait(driver, 15).until(expected_conditions.element_to_be_clickable(locator))
-            return element
-        else:
-            element = WebDriverWait(driver, 15).until(expected_conditions.element_to_be_clickable(locator))
-            return element
-
-    @allure.step('Кликаем по элементу {locator}')
-    def click_to_element(self, locator, driver):
-        self.find_element_with_wait(locator, driver).click()
+class AuthorizationAndRecoveryPages(BasePages):
+    @allure.step('Авторизуемся')
+    def authorization(self, driver_start):
+        self.find_element_with_wait(MainPageLocators.personal_account, driver_start).click()
+        email_field = self.find_element_with_wait(AutorizationPageLocators.email_field, driver_start)
+        email_field.send_keys(CREDS["email"])
+        password_field = self.find_element_with_wait(AutorizationPageLocators.password_field, driver_start)
+        password_field.send_keys(CREDS['password'])
+        self.find_element_with_wait(AutorizationPageLocators.login_button, driver_start).click()
+        time.sleep(1)
+        self.find_element_with_wait(MainPageLocators.personal_account, driver_start).click()
 
     def recovery_password(self, driver_start):
         input_field = self.find_element_with_wait(RecoveryPageLocators.recovery_input_field, driver_start)
         input_field.send_keys(CREDS["email"])
-        self.find_element_with_wait(RecoveryPageLocators.recovery_button, driver_start).click()
+        self.click_to_element(RecoveryPageLocators.recovery_button, driver_start)
 
 
 

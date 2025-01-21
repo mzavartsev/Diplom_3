@@ -2,6 +2,9 @@ import pytest
 from selenium import webdriver
 import requests
 from data import *
+from selenium.webdriver.support.wait import WebDriverWait
+from locators.main_page_locators import *
+from selenium.webdriver.support import expected_conditions
 
 
 DRIVER_NAME = None
@@ -19,6 +22,7 @@ def driver_start(request):
         driver = webdriver.Firefox()
         driver.set_window_size(1920, 1080)
         driver.get(BASE_URL)
+        WebDriverWait(driver, 15).until(expected_conditions.invisibility_of_element((By.XPATH, "//div[contains(@class, 'Modal_modal__P3_V5')]/div")))
     yield driver
     driver.quit()
 
@@ -27,4 +31,8 @@ def driver_start(request):
 def create_and_delete_user():
     user = requests.post("https://stellarburgers.nomoreparties.site/api/auth/register",
                          data=CREDS)
-    return user.status_code, user.json(), user.text
+    token = user.json()["accessToken"]
+    auth_token = {"authorization": token}
+    yield user.status_code, user.json(), user.text
+    requests.delete("https://stellarburgers.nomoreparties.site/api/auth/user",
+                                  headers=auth_token)

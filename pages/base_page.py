@@ -1,17 +1,17 @@
-import time
 import allure
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions
 from locators.main_page_locators import *
-from locators.autorization_page_locators import *
 from selenium.webdriver.common.action_chains import ActionChains
-from data import *
-from conftest import DRIVER_NAME
 
 
-class MainPages:
+class BasePages:
     @allure.step('Находим элемент {locator}')
     def find_element_with_wait(self, locator, driver):
+        element = WebDriverWait(driver, 15).until(expected_conditions.element_to_be_clickable(locator))
+        return element
+
+    def find_test(self, locator, driver):
         element = WebDriverWait(driver, 15).until(expected_conditions.visibility_of_element_located(locator))
         return element
 
@@ -27,24 +27,19 @@ class MainPages:
 
     @allure.step('Кликаем по элементу {locator}')
     def click_to_element(self, locator, driver):
+        WebDriverWait(driver, 15).until(expected_conditions.invisibility_of_element((By.XPATH, "//div[contains(@class, 'Modal_modal__P3_V5')]/div")))
         self.find_element_with_wait(locator, driver).click()
 
-    @allure.step('Авторизуемся')
-    def authorization(self, driver_start):
-        self.find_element_with_wait(MainPageLocators.personal_account, driver_start).click()
-        email_field = self.find_element_with_wait(AutorizationPageLocators.email_field, driver_start)
-        email_field.send_keys(CREDS["email"])
-        password_field = self.find_element_with_wait(AutorizationPageLocators.password_field, driver_start)
-        password_field.send_keys(CREDS['password'])
-        self.find_element_with_wait(AutorizationPageLocators.login_button, driver_start).click()
-        time.sleep(1)
-        self.find_element_with_wait(MainPageLocators.personal_account, driver_start).click()
-
     def create_order(self, driver_start):
-        if DRIVER_NAME == "firefox":
-            bun = self.find_element_with_wait(MainPageLocators.bun, driver_start)
-            souse = self.find_element_with_wait(MainPageLocators.souse, driver_start)
-            target_place = self.find_element_with_wait(MainPageLocators.target_place, driver_start)
+        bun = self.find_element_with_wait(MainPageLocators.bun, driver_start)
+        souse = self.find_element_with_wait(MainPageLocators.souse, driver_start)
+        target_place = self.find_element_with_wait(MainPageLocators.target_place, driver_start)
+        self.drag_and_drop(driver_start, bun, target_place)
+        self.drag_and_drop(driver_start, souse, target_place)
+        self.find_element_with_wait(MainPageLocators.create_order_button1, driver_start).click()
+
+    def drag_and_drop(self, driver_start, source, target_place):
+        if driver_start.capabilities["browserName"] == "firefox":
             driver_start.execute_script("""
                 var src = arguments[0];
                 var target = arguments[1];
@@ -61,13 +56,11 @@ class MainPages:
                 });
                 src.dispatchEvent(dragEvent);
                 target.dispatchEvent(dropEvent);
-            """, bun, target_place)
-            self.find_element_with_wait(MainPageLocators.create_order_button1, driver_start).click()
+            """, source, target_place)
         else:
-            bun = self.find_element_with_wait(MainPageLocators.bun, driver_start)
-            souse = self.find_element_with_wait(MainPageLocators.souse, driver_start)
-            target_place = self.find_element_with_wait(MainPageLocators.target_place, driver_start)
             actions = ActionChains(driver_start)
-            actions.drag_and_drop(souse, target_place).perform()
-            actions.drag_and_drop(bun, target_place).perform()
-            self.find_element_with_wait(MainPageLocators.create_order_button1, driver_start).click()
+            actions.drag_and_drop(source, target_place).perform()
+
+    def get_page(self, driver_start, page):
+        driver_start.get(page)
+        WebDriverWait(driver_start, 15).until(expected_conditions.invisibility_of_element((By.XPATH, "//div[contains(@class, 'Modal_modal__P3_V5')]/div")))
