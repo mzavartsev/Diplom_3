@@ -1,7 +1,3 @@
-import time
-from pages.base_page import *
-from locators.main_page_locators import *
-from data import *
 from pages.authorization_and_recovery_pages import *
 
 
@@ -12,8 +8,8 @@ class TestSectionOrderFeed:
     def test_show_details_of_order(self, driver_start, create_and_delete_user):
         class_object = BasePages()
         class_object.get_page(driver_start, ORDER_FEED_URL)
-        class_object.find_element_with_wait(MainPageLocators.order_in_order_feed, driver_start).click()
-        modal_window = class_object.find_element_with_wait(MainPageLocators.section_open_locator, driver_start)
+        class_object.find_element_with_wait(MainPageLocators.ORDER_IN_ORDER_FEED, driver_start).click()
+        modal_window = class_object.find_element_with_wait(MainPageLocators.SECTION_OPEN_LOCATOR, driver_start)
         assert "opened" in modal_window.get_attribute("class")
 
     @allure.title("Заказы пользователя из раздела «История заказов» отображаются на странице «Лента заказов»")
@@ -26,10 +22,10 @@ class TestSectionOrderFeed:
         class_object.get_page(driver_start, BASE_URL)
         class_object.create_order(driver_start)
         order_number_element = (class_object.find_element_with_wait_for_chaching_text
-                                (MainPageLocators.number_of_order_after_create_order, driver_start))
+                                (MainPageLocators.NUMBER_OF_ORDER_AFTER_CREATE_ORDER, driver_start))
         order_number = order_number_element.text
         class_object.get_page(driver_start, ORDER_FEED_URL)
-        order_status_box = class_object.find_element_with_wait(MainPageLocators.order_status_box, driver_start).text
+        order_status_box = class_object.find_element_with_wait(MainPageLocators.ORDER_STATUS_BOX, driver_start).text
         assert order_number in order_status_box
 
     @allure.title("При создании нового заказа счётчик Выполнено за всё время увеличивается")
@@ -38,15 +34,14 @@ class TestSectionOrderFeed:
     def test_counter_of_completed_order_for_all_time_increases(self, driver_start, create_and_delete_user):
         class_object = AuthorizationAndRecoveryPages()
         class_object.get_page(driver_start, ORDER_FEED_URL)
-        counters = class_object.find_few_elements_with_wait(MainPageLocators.counters_of_created, driver_start)
+        counters = class_object.find_few_elements_with_wait(MainPageLocators.COUNTERS_OF_CREATED, driver_start)
         counter_one_before = counters[0].text
         class_object.get_page(driver_start, LOGIN_PAGE_URL)
         class_object.authorization(driver_start)
         class_object.get_page(driver_start, BASE_URL)
         class_object.create_order(driver_start)
         class_object.get_page(driver_start, ORDER_FEED_URL)
-        counters = class_object.find_few_elements_with_wait(MainPageLocators.counters_of_created,
-                                                                                  driver_start)
+        counters = class_object.find_few_elements_with_wait(MainPageLocators.COUNTERS_OF_CREATED, driver_start)
         counter_one_after = counters[0].text
         assert int(counter_one_before) <= int(counter_one_after)
 
@@ -56,14 +51,14 @@ class TestSectionOrderFeed:
     def test_counter_of_completed_order_for_today_increases(self, driver_start, create_and_delete_user):
         class_object = AuthorizationAndRecoveryPages()
         class_object.get_page(driver_start, ORDER_FEED_URL)
-        counters = class_object.find_few_elements_with_wait(MainPageLocators.counters_of_created, driver_start)
+        counters = class_object.find_few_elements_with_wait(MainPageLocators.COUNTERS_OF_CREATED, driver_start)
         counter_two_before = counters[1].text
         class_object.get_page(driver_start, LOGIN_PAGE_URL)
         class_object.authorization(driver_start)
         class_object.get_page(driver_start, BASE_URL)
         class_object.create_order(driver_start)
         class_object.get_page(driver_start, ORDER_FEED_URL)
-        counters = class_object.find_few_elements_with_wait(MainPageLocators.counters_of_created, driver_start)
+        counters = class_object.find_few_elements_with_wait(MainPageLocators.COUNTERS_OF_CREATED, driver_start)
         counter_two_after = counters[1].text
         assert int(counter_two_before) <= int(counter_two_after)
 
@@ -77,11 +72,13 @@ class TestSectionOrderFeed:
         class_object.get_page(driver_start, BASE_URL)
         class_object.create_order(driver_start)
         order_number_element = class_object.find_element_with_wait_for_chaching_text(
-            MainPageLocators.number_of_order_after_create_order, driver_start)
+            MainPageLocators.NUMBER_OF_ORDER_AFTER_CREATE_ORDER, driver_start)
         order_number = order_number_element.text
         class_object.get_page(driver_start, ORDER_FEED_URL)
-        numbers_at_work = class_object.find_element_with_wait_for_chaching_text(MainPageLocators.order_number_at_work, driver_start, text="Все текущие заказы готовы!")
-        class_object.find_element_with_wait_for_chaching_text(MainPageLocators.order_number_at_work1, driver_start, text="Все текущие заказы готовы!")
+        numbers_at_work = (class_object.find_element_with_wait_for_chaching_text
+                           (MainPageLocators.ORDER_NUMBER_AT_WORK, driver_start, text="Все текущие заказы готовы!"))
+        (class_object.find_element_with_wait_for_chaching_text
+         (MainPageLocators.ORDER_NUMBER_AT_WORK1, driver_start, text="Все текущие заказы готовы!"))
         number_of_li = numbers_at_work.find_elements(By.TAG_NAME, "li")
         for i in range(len(number_of_li)):
             number_of_li[i] = int(number_of_li[i].text)

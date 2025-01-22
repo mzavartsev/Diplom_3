@@ -1,6 +1,3 @@
-import time
-from pages.base_page import *
-from locators.main_page_locators import *
 from locators.profile_page_locators import *
 from pages.authorization_and_recovery_pages import *
 from data import *
@@ -22,7 +19,7 @@ class TestPersonalAccount:
     def test_go_to_order_history(self, driver_start, create_and_delete_user):
         class_object = AuthorizationAndRecoveryPages()
         class_object.authorization(driver_start)
-        class_object.find_element_with_wait(ProfilePageLocators.order_history, driver_start).click()
+        class_object.find_element_with_wait(ProfilePageLocators.ORDER_HISTORY, driver_start).click()
         assert driver_start.current_url == ORDER_HISTORY_URL
 
     @allure.title("Выход из аккаунта.")
@@ -31,7 +28,6 @@ class TestPersonalAccount:
     def test_logout(self, driver_start, create_and_delete_user):
         class_object = AuthorizationAndRecoveryPages()
         class_object.authorization(driver_start)
-        class_object.find_element_with_wait(ProfilePageLocators.exit, driver_start).click()
-        class_object.click_to_element(MainPageLocators.personal_account, driver_start)
+        class_object.find_element_with_wait(ProfilePageLocators.EXIT, driver_start).click()
+        class_object.click_to_element(MainPageLocators.PERSONAL_ACCOUNT, driver_start)
         assert driver_start.current_url == LOGIN_PAGE_URL
-

@@ -22,7 +22,7 @@ def driver_start(request):
         driver = webdriver.Firefox()
         driver.set_window_size(1920, 1080)
         driver.get(BASE_URL)
-        WebDriverWait(driver, 15).until(expected_conditions.invisibility_of_element((By.XPATH, "//div[contains(@class, 'Modal_modal__P3_V5')]/div")))
+        WebDriverWait(driver, 15).until(expected_conditions.invisibility_of_element((MainPageLocators.MODAL_WINDOW3)))
     yield driver
     driver.quit()
 

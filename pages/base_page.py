@@ -27,16 +27,17 @@ class BasePages:
 
     @allure.step('Кликаем по элементу {locator}')
     def click_to_element(self, locator, driver):
-        WebDriverWait(driver, 15).until(expected_conditions.invisibility_of_element((By.XPATH, "//div[contains(@class, 'Modal_modal__P3_V5')]/div")))
+        WebDriverWait(driver, 15).until(expected_conditions.invisibility_of_element
+                                        ((By.XPATH, "//div[contains(@class, 'Modal_modal__P3_V5')]/div")))
         self.find_element_with_wait(locator, driver).click()
 
     def create_order(self, driver_start):
-        bun = self.find_element_with_wait(MainPageLocators.bun, driver_start)
-        souse = self.find_element_with_wait(MainPageLocators.souse, driver_start)
-        target_place = self.find_element_with_wait(MainPageLocators.target_place, driver_start)
+        bun = self.find_element_with_wait(MainPageLocators.BUN, driver_start)
+        souse = self.find_element_with_wait(MainPageLocators.SOUSE, driver_start)
+        target_place = self.find_element_with_wait(MainPageLocators.TARGET_PLACE, driver_start)
         self.drag_and_drop(driver_start, bun, target_place)
         self.drag_and_drop(driver_start, souse, target_place)
-        self.find_element_with_wait(MainPageLocators.create_order_button1, driver_start).click()
+        self.find_element_with_wait(MainPageLocators.CREATE_ORDER_BUTTON1, driver_start).click()
 
     def drag_and_drop(self, driver_start, source, target_place):
         if driver_start.capabilities["browserName"] == "firefox":
@@ -63,4 +64,5 @@ class BasePages:
 
     def get_page(self, driver_start, page):
         driver_start.get(page)
-        WebDriverWait(driver_start, 15).until(expected_conditions.invisibility_of_element((By.XPATH, "//div[contains(@class, 'Modal_modal__P3_V5')]/div")))
+        WebDriverWait(driver_start, 15).until(expected_conditions.invisibility_of_element
+                                              ((MainPageLocators.MODAL_WINDOW3)))
