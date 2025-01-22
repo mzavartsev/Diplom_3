@@ -7,6 +7,6 @@ RESET_PASSWORD_PAGE_URL = BASE_URL + "reset-password"
 ORDER_FEED_URL = BASE_URL + "feed"
 
 
-CREDS = {"name": "diplom3415qweqwe2221@ya.ru",
-         "email": "diplom3415qweqwe2221@ya.ru",
+CREDS = {"name": "diplom3415qweqwe22214@ya.ru",
+         "email": "diplom3415qweqwe22214@ya.ru",
          "password": "qweqwe123"}

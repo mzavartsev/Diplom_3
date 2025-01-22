@@ -1,4 +1,5 @@
 from pages.authorization_and_recovery_pages import *
+from pages.main_page import *
 
 
 class TestSectionOrderFeed:
@@ -6,7 +7,7 @@ class TestSectionOrderFeed:
     @allure.description("Если кликнуть на заказ, откроется всплывающее окно с деталями")
     @allure.link(BASE_URL, name="https://stellarburgers.nomoreparties.site/")
     def test_show_details_of_order(self, driver_start, create_and_delete_user):
-        class_object = BasePages()
+        class_object = MainPage()
         class_object.get_page(driver_start, ORDER_FEED_URL)
         class_object.find_element_with_wait(MainPageLocators.ORDER_IN_ORDER_FEED, driver_start).click()
         modal_window = class_object.find_element_with_wait(MainPageLocators.SECTION_OPEN_LOCATOR, driver_start)
@@ -17,11 +18,12 @@ class TestSectionOrderFeed:
     @allure.link(BASE_URL, name="https://stellarburgers.nomoreparties.site/")
     def test_user_orders_displayed_on_the_order_feed(self, driver_start, create_and_delete_user):
         class_object = AuthorizationAndRecoveryPages()
+        second_class_object = MainPage()
         class_object.get_page(driver_start, LOGIN_PAGE_URL)
         class_object.authorization(driver_start)
         class_object.get_page(driver_start, BASE_URL)
-        class_object.create_order(driver_start)
-        order_number_element = (class_object.find_element_with_wait_for_chaching_text
+        second_class_object.create_order(driver_start)
+        order_number_element = (second_class_object.find_element_with_wait_for_changing_text
                                 (MainPageLocators.NUMBER_OF_ORDER_AFTER_CREATE_ORDER, driver_start))
         order_number = order_number_element.text
         class_object.get_page(driver_start, ORDER_FEED_URL)
@@ -33,13 +35,14 @@ class TestSectionOrderFeed:
     @allure.link(BASE_URL, name="https://stellarburgers.nomoreparties.site/")
     def test_counter_of_completed_order_for_all_time_increases(self, driver_start, create_and_delete_user):
         class_object = AuthorizationAndRecoveryPages()
+        second_class_object = MainPage()
         class_object.get_page(driver_start, ORDER_FEED_URL)
         counters = class_object.find_few_elements_with_wait(MainPageLocators.COUNTERS_OF_CREATED, driver_start)
         counter_one_before = counters[0].text
         class_object.get_page(driver_start, LOGIN_PAGE_URL)
         class_object.authorization(driver_start)
         class_object.get_page(driver_start, BASE_URL)
-        class_object.create_order(driver_start)
+        second_class_object.create_order(driver_start)
         class_object.get_page(driver_start, ORDER_FEED_URL)
         counters = class_object.find_few_elements_with_wait(MainPageLocators.COUNTERS_OF_CREATED, driver_start)
         counter_one_after = counters[0].text
@@ -50,13 +53,14 @@ class TestSectionOrderFeed:
     @allure.link(BASE_URL, name="https://stellarburgers.nomoreparties.site/")
     def test_counter_of_completed_order_for_today_increases(self, driver_start, create_and_delete_user):
         class_object = AuthorizationAndRecoveryPages()
+        second_class_object = MainPage()
         class_object.get_page(driver_start, ORDER_FEED_URL)
         counters = class_object.find_few_elements_with_wait(MainPageLocators.COUNTERS_OF_CREATED, driver_start)
         counter_two_before = counters[1].text
         class_object.get_page(driver_start, LOGIN_PAGE_URL)
         class_object.authorization(driver_start)
         class_object.get_page(driver_start, BASE_URL)
-        class_object.create_order(driver_start)
+        second_class_object.create_order(driver_start)
         class_object.get_page(driver_start, ORDER_FEED_URL)
         counters = class_object.find_few_elements_with_wait(MainPageLocators.COUNTERS_OF_CREATED, driver_start)
         counter_two_after = counters[1].text
@@ -67,17 +71,18 @@ class TestSectionOrderFeed:
     @allure.link(BASE_URL, name="https://stellarburgers.nomoreparties.site/")
     def test_show_number_of_order_after_create(self, driver_start, create_and_delete_user):
         class_object = AuthorizationAndRecoveryPages()
+        second_class_object = MainPage()
         class_object.get_page(driver_start, LOGIN_PAGE_URL)
         class_object.authorization(driver_start)
         class_object.get_page(driver_start, BASE_URL)
-        class_object.create_order(driver_start)
-        order_number_element = class_object.find_element_with_wait_for_chaching_text(
+        second_class_object.create_order(driver_start)
+        order_number_element = second_class_object.find_element_with_wait_for_changing_text(
             MainPageLocators.NUMBER_OF_ORDER_AFTER_CREATE_ORDER, driver_start)
         order_number = order_number_element.text
         class_object.get_page(driver_start, ORDER_FEED_URL)
-        numbers_at_work = (class_object.find_element_with_wait_for_chaching_text
+        numbers_at_work = (second_class_object.find_element_with_wait_for_changing_text
                            (MainPageLocators.ORDER_NUMBER_AT_WORK, driver_start, text="Все текущие заказы готовы!"))
-        (class_object.find_element_with_wait_for_chaching_text
+        (second_class_object.find_element_with_wait_for_changing_text
          (MainPageLocators.ORDER_NUMBER_AT_WORK1, driver_start, text="Все текущие заказы готовы!"))
         number_of_li = numbers_at_work.find_elements(By.TAG_NAME, "li")
         for i in range(len(number_of_li)):

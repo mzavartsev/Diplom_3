@@ -17,6 +17,7 @@ class AuthorizationAndRecoveryPages(BasePages):
         time.sleep(1)
         self.find_element_with_wait(MainPageLocators.PERSONAL_ACCOUNT, driver_start).click()
 
+    @allure.step('Восстановление пароля')
     def recovery_password(self, driver_start):
         input_field = self.find_element_with_wait(RecoveryPageLocators.RECOVERY_INPUT_FIELD, driver_start)
         input_field.send_keys(CREDS["email"])
